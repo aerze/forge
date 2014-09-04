@@ -1,4 +1,4 @@
-forge
+Forge.js
 =====
 
-Personal CMS - We'll see how this goes
+A Personal CMS - We'll see how this goes
