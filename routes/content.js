@@ -143,5 +143,58 @@ function ContentHandler (db) {
         });
     }
 
-    
+    function extractTags(tags) {
+        'use strict';
+        
+        var cleaned = [],
+            tagsArray = tags.split(',');
+
+        for (var i = tagsArray.length - 1; i >= 0; i--) {
+            if ((cleaned.indexOf(tagsArray[i]) === -1) && tagsArray[i] !== '') {
+                cleaned.push(tagsArray[i].replace(/\s/g, ''));
+            }
+        };
+
+        return cleaned;
+    }
+
+    this.handleNewPost = function(req, res, next) {
+        'use strict';
+        
+        var title = req.body.subject,
+            post = req.body.body,
+            tags = req.body.tags;
+
+        if (!req.username) return res.redirect('/signup');
+
+        if (!title || !post) {
+            var errors = 'Post must contain a title and a blog entry';
+            return res.render('newPostTemplate', {
+                subject: title,
+                username: req.username,
+                body: post,
+                tags: tags,
+                errors: errors
+            });
+        }
+
+        var tagsArray = extractTags(tags);
+
+        // Looks good so far, time to clean.
+        // escape all the things
+        var escapedPost = sanitize(post).escape();
+        // Change the newlines for some breaks
+        var formattedPost = escapedPost.replace(/\r?\n/g, '<br>');
+
+        posts.insertEntry(title, formattedPost, tagsArray, req.username, function(err, permalink) {
+            'use strict';
+            
+            if (err) return next(err);
+
+            // redirect ro the new post
+            return res.redirect('/post/' + permalink);
+        });
+    }
 }
+
+module.exports = ContentHandler;
