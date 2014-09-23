@@ -17,7 +17,7 @@ function PostsDAO(db) {
     this.insertEntry = function(title, body, tags, author, callback) {
         'use strict';
 
-        console.log('Inserting new post: ' + title);
+        console.log('PostsDAO.insertEntry: Inserting new post: ' + title);
 
         // fix permalink to not inculde whitespace
         var permalink = title.replace( /\s/g, '_');
@@ -39,7 +39,7 @@ function PostsDAO(db) {
             'use strict';
 
             if (!err) {
-                console.log('Post inserted');
+                console.log('PostsDAO.insertEntry: Post inserted');
                 callback(null, inserted[0], permalink);
             } else {
                 callback(err, null);
@@ -89,7 +89,7 @@ function PostsDAO(db) {
             } else {
                 callback(err, null);
             }
-        })
+        });
     }
 
     this.addComment = function(permalink, name, email, body, callback) {
@@ -107,7 +107,7 @@ function PostsDAO(db) {
         posts.findOne({ permalink: permalink }, function(err, post) {
             'use strict';
 
-            if (!err && post !=== null) {
+            if (!err && post !== null) {
                 post.comments.push(comment);
 
                 posts.update({ '_id ': post._id }, post, function(err, updated) {
@@ -118,7 +118,7 @@ function PostsDAO(db) {
                     } else {
                         callback(err, null);
                     }
-                })
+                });
             } else {
                 callback(err, null);
             }
@@ -126,4 +126,4 @@ function PostsDAO(db) {
     }
 }
 
-module.exports.PostsDAO;
+module.exports.PostsDAO = PostsDAO;

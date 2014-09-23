@@ -22,11 +22,11 @@ module.exports = exports = function(app, db) {
     app.get('/postNotFound', contentHandler.displayPostNotFound);
     
     // Add new post form
-    app.get('/newpost', contentHandler.displayNewPage);
+    app.get('/newpost', contentHandler.displayNewPostPage);
     app.post('/newpost', contentHandler.handleNewPost);
 
     // Login Form
-    app.get('/login', sessionsHandler.displayLoginPage);
+    app.get('/login', sessionHandler.displayLoginPage);
     app.post('/login', sessionHandler.handleLoginRequest);
 
     // Logout Page

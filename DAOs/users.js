@@ -1,4 +1,4 @@
-var bcrypt = requrie('bcrypt-nodejs');
+var bcrypt = require('bcrypt-nodejs');
 
 // The Users Data Access Object must be constructed with a connected db object
 // DAOs are models to the data in mongo db and are used to interact with the
@@ -34,7 +34,8 @@ function UsersDAO(db) {
             'use strict';
 
             if (!err) {
-                console.log('New user inserted');
+                console.log('UsersDAO.addUser: New user inserted');
+                console.log(result);
                 return callback(null, result[0]);
             }
 

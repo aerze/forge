@@ -6,11 +6,12 @@ var UsersDAO = require('../DAOs/users').UsersDAO,
 function SessionHandler (db) {
     "use strict";
 
-    var users = new UersDAO(db);
+    var users = new UsersDAO(db);
     var sessions = new SessionsDAO(db);
 
     this.isLoggedInMiddleware = function(req, res, next) {
         var sessionID = req.cookies.session;
+
         sessions.getUsername(sessionID, function(err, username) {
             'use strict';
 
@@ -31,8 +32,6 @@ function SessionHandler (db) {
 
         var username = req.body.username,
             password = req.body.password;
-
-        console.log('User submitted username: ' + username);
 
         users.validateLogin(username, password, function(err, user) {
             'use strict';
@@ -110,7 +109,7 @@ function SessionHandler (db) {
             return false;            
         }
         if (!PASS_REGEX.test(password)) {
-            errors.['passwordError'] = 'Invalid Password.';
+            errors['passwordError'] = 'Invalid Password.';
             return false; 
         }
         if (password != verify) {
@@ -164,16 +163,16 @@ function SessionHandler (db) {
                 });
             });
         } else {
-            console.log('User didn\'t validate');
+            console.log('SessionHandler.handleSignup: User didn\'t validate');
             return res.render('signup', errors);
         }
     }
 
     this.displayWelcomePage = function(req, res, next) {
         'use strict';
-
+        
         if (!req.username) {
-            // console.log('Welcome page says: Can\'t identify user, redircting to signup');
+            console.log('SessionHandler.displayWelcomePage: Can\'t identify user, redircting to signup');
             return res.redirect('/signup');
         }
 

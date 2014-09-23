@@ -20,24 +20,24 @@ MongoClient.connect('mongodb://localhost:27017/blog', function(err, db) {
     app.set('views', path.join(__dirname, 'views'));
     // Swig caches templates instead of express, so only leave one off
     app.set('view cache', false);
-    // swig.setDefaults({ cache: false });
+    swig.setDefaults({ cache: false });
     app.use(express.static(path.join(__dirname, 'public')));
 
     // Express middleware to populate 'req.cookies' so we can access cookies
     app.use(cookieParser());
     // Express middleware to populate 'req.body' so we can access POST variables
-    app.use(bodyParser().json());
-    app.use(bodyParser().urlencoded());
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded());
 
     routes(app, db);
 
 
     app.get('/', function (req, res, next) {
-        console.log('\'/\' GET!');
+        console.log('Server: \'/\' GET!');
         res.render('index', {title: 'Forge CMS'});
     });
 
-    var server = app.listen(3000, function () {
-        console.log('Listening on port ' + server.address().port );
+    var server = app.listen(80, function () {
+        console.log('Server: Listening on port ' + server.address().port );
     });
 });

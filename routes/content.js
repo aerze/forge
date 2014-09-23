@@ -1,4 +1,4 @@
-var PostsDAO = require('../DAOs/PostsDAO'),
+var PostsDAO = require('../DAOs/posts').PostsDAO,
     sanitize = require('validator').sanitize;
 
 // The ContentHandler must be contructor with a connected DB
@@ -14,7 +14,7 @@ function ContentHandler (db) {
             'use strict';
 
             if (err) return next(err);
-
+            
             return res.render('blogTemplate', {
                 title: 'Blog Homepage',
                 username: req.username,

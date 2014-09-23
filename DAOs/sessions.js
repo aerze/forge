@@ -9,7 +9,7 @@ function SessionsDAO(db) {
 
     // This is a check to make sure that 'this' is not pointing to the global this
     // and is instead a SessionsDAO Object
-    if (false === (this.instanceof SessionsDAO)) {
+    if (false === (this instanceof SessionsDAO)) {
         console.warn('Warning: SessionsDAO contructor called without "new" operator');
         return new SessionsDAO(db);
     }
@@ -20,7 +20,7 @@ function SessionsDAO(db) {
         'use strict';
 
         // Generate session ID
-        var currentDate (new Date()).valueOf().toString();
+        var currentDate = (new Date()).valueOf().toString();
         var random = Math.random().toString();
         var sessionID = crypto.createHash('sha1').update(currentDate + random).digest('hex');
 
@@ -29,7 +29,11 @@ function SessionsDAO(db) {
 
         sessions.insert(session, function(err, result) {
             'use strict';
-            callback(err, sessionID);
+            if (!err) {
+                callback(null, sessionID)
+            } else {
+                callback(err, null);
+            }
         });
     }
 
@@ -46,11 +50,12 @@ function SessionsDAO(db) {
         'use strict';
 
         if (!sessionID) {
+            console.warn("SessnionDAO.getUsername: Session not set");
             callback(Error('Session not set'), null);
             return;
         }
 
-        sessions.findOne({ '_id ': sessionID }, function(err, session) {
+        sessions.findOne({ '_id': sessionID }, function(err, session) {
             'use strict';
 
             if (err) return callback(err, null);
@@ -59,9 +64,8 @@ function SessionsDAO(db) {
                 callback(new Error('Session: ' + session + ' does not exist'), null);
                 return;
             }
-
             callback(null, session.username);
-        })
+        });
     }
 }
 
